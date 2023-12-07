@@ -1,71 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      body {
+        body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
       }
-      header {
+
+        header {
         text-align: center;
-        padding: 10px;
-        background-color: #f2f2f2;
+        padding: 20px;
+        background-color: #333;
+        color: #fff;
       }
-      nav {
-        margin-top: 20px;
+
+        nav {
         display: flex;
         justify-content: center;
+        background-color: #444;
+        padding: 10px;
       }
+
       nav a {
         margin: 0 15px;
         text-decoration: none;
-        color: #333;
+        color: #fff;
         font-weight: bold;
+        transition: color 0.3s ease, transform 0.2s ease;
+      }
+
+      nav a:hover {
+        color: #ffcc00;
+        transform: scale(1.1);
       }
       .container {
         max-width: 800px;
         margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       }
+
       form {
         margin-top: 20px;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
       }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="file"] {
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      button {
+        background-color: #272727;
+        color: #ffffff;
+        padding: 10px 15px;
+        border:green;
+        border-radius: 5px;
+        border-color: green;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+      }
+
+      button:hover {
+        background-color: #ffcc00;
+      }
+      #add{
+        color: #ffcc00;
+      }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <h1>Selamat Datang!!!</h1>
-      <h2>Informasi atau Dashbord Data Promosi Retail</h2>
+        <h1>Selamat Datang!!!</h1>
+        <h2>Informasi atau Dashbord Data Promosi Retail</h2>
     </header>
 
     <nav>
-      <a href="/">Home</a>
-      <a href="/addfile">Add File Excel/CSV</a>
-      <a href="/summarizedata">Summarize Data</a>
-      <a href="/grafikbar">Grafik Bar</a>
-      <a href="/grafikScatter">Grafik ScatterPlot</a>
+        <a href="/" id="home">Home</a>
+        <a href="/addfile" id="add">Add File Excel/CSV</a>
+        <a href="/summarizedata" id="summaries">Summarize Data</a>
+        <a href="/grafikbar" id="bar">Grafik Bar</a>
+        <a href="/grafikScatter" id="scatter">Grafik ScatterPlot</a>
     </nav>
 
     <div class="container">
-      <h2>Add File Excel/CSV</h2>
-      <p>
-        This is the home page of our web application. You can find general
-        information about the features we provide here.
-      </p>
+        <h2>Add File Excel/CSV</h2>
+        <p>This is the home page of our web application. You can find general information about the features we provide here.</p>
     </div>
 
     <div class="container">
-      <h2>Upload Data</h2>
-      <form action="/upload" method="post" enctype="multipart/form-data">
-        <label for="file">Choose a file:</label>
-        <input type="file" name="file" id="file" accept=".csv, .xlsx" />
-        <button type="submit">Upload</button>
-      </form>
+        <h2>Upload Data</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label for="file">Choose a file:</label>
+            <input type="file" name="file" id="file" accept=".csv, .xlsx" />
+            <button type="submit">Upload</button>
+        </form>
     </div>
-  </body>
+</body>
 </html>
