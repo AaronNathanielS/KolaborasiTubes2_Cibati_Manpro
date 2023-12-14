@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Summarize Data</title>
+    <script src="/index.js" defer></script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -42,6 +43,7 @@
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: auto;
       }
 
       form {
@@ -82,15 +84,38 @@
       button:hover {
         background-color: #ffcc00;
       }
-      #summaries{
+      #summaries {
         color: #ffcc00;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto; /* Aktifkan gulir horizontal */
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap; /* Hindari pemutusan baris */
+      }
+
+      th {
+        background-color: #333;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f5f5f5;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Selamat Datang!!!</h1>
-        <h2>Informasi atau Dashbord Data Promosi Retail</h2>
+      <h1>Selamat Datang!!!</h1>
+      <h2>Informasi atau Dashbord Data Promosi Retail</h2>
     </header>
 
     <nav>
@@ -102,17 +127,97 @@
     </nav>
 
     <div class="container">
-        <h2>Summarize Data</h2>
-        <p>This is the home page of our web application. You can find general information about the features we provide here.</p>
+      <h2>Summarize Data</h2>
+      <p>
+        This is the home page of our web application. You can find general
+        information about the features we provide here.
+      </p>
     </div>
 
     <div class="container">
-        <h2>Write SQL Code</h2>
-        <form action="/summarize" method="post">
-            <label for="sqlCode">Enter SQL Code:</label>
-            <textarea name="sqlCode" id="sqlCode" placeholder="Write your SQL code here"></textarea>
-            <button type="submit">Summarize Data</button>
-        </form>
+      <h2>Write SQL Code</h2>
+      <form action="/summarize" method="post">
+        <label for="sqlCode">Enter SQL Code:</label>
+        <textarea
+          name="sqlCode"
+          id="sqlCode"
+          placeholder="Write your SQL code here"
+        ></textarea>
+        <button type="submit">Summarize Data</button>
+      </form>
     </div>
-</body>
+    <div class="container">
+      <div class="table">
+        <table border="1">
+          <tr>
+            <th>ID</th>
+            <th>Year_Birth</th>
+            <th>Education</th>
+            <th>Maritial_Status</th>
+            <th>Income</th>
+            <th>Kidhome</th>
+            <th>Teenhome</th>
+            <th>Dt_Customer</th>
+            <th>Recency</th>
+            <th>MntWines</th>
+            <th>MntFruits</th>
+            <th>MntMeatProducts</th>
+            <th>MntFishProducts</th>
+            <th>MntSweetProducts</th>
+            <th>MntGoldProds</th>
+            <th>NumDealsPurchases</th>
+            <th>NumWebPurchases</th>
+            <th>NumCatalogPurchases</th>
+            <th>NumStorePurchases</th>
+            <th>NumWebVisitsMonth</th>
+            <th>AcceptedCmp3</th>
+            <th>AcceptedCmp4</th>
+            <th>AcceptedCmp5</th>
+            <th>AcceptedCmp1</th>
+            <th>AcceptedCmp2</th>
+            <th>Complain</th>
+            <th>Z_CostContact</th>
+            <th>Z_Revenue</th>
+            <th>Response</th>
+            <!-- Tambahkan kolom lain sesuai dengan nama kolom di tabel -->
+          </tr>
+          <% data.forEach(row => { %>
+          <tr>
+            <td><%= row.ID %></td>
+            <td><%= row.Year_Birth %></td>
+            <td><%= row.Education %></td>
+            <td><%= row.Marital_Status %></td>
+            <td><%= row.Income %></td>
+            <td><%= row.Kidhome %></td>
+            <td><%= row.Teenhome %></td>
+            <td><%= row.Dt_Customer %></td>
+            <td><%= row.Recency %></td>
+            <td><%= row.MntWines %></td>
+            <td><%= row.MntFruits %></td>
+            <td><%= row.MntMeatProducts %></td>
+            <td><%= row.MntFishProducts %></td>
+            <td><%= row.MntSweetProducts %></td>
+            <td><%= row.MntGoldProds %></td>
+            <td><%= row.NumDealsPurchases %></td>
+            <td><%= row.NumWebPurchases %></td>
+            <td><%= row.NumCatalogPurchases %></td>
+            <td><%= row.NumStorePurchases %></td>
+            <td><%= row.NumWebVisitsMonth %></td>
+            <td><%= row.AcceptedCmp3 %></td>
+            <td><%= row.AcceptedCmp4 %></td>
+            <td><%= row.AcceptedCmp5 %></td>
+            <td><%= row.AcceptedCmp1 %></td>
+            <td><%= row.AcceptedCmp2 %></td>
+            <td><%= row.Complain %></td>
+            <td><%= row.Z_CostContact %></td>
+            <td><%= row.Z_Revenue %></td>
+            <td><%= row.Response %></td>
+
+            <!-- Tambahkan sel lain sesuai dengan nama kolom di tabel -->
+          </tr>
+          <% }); %>
+        </table>
+      </div>
+    </div>
+  </body>
 </html>

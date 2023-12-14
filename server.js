@@ -38,7 +38,22 @@ app.get("/addfile", (req, res) => {
 });
 
 app.get("/summarizedata", (req, res) => {
-  res.render("SummarizeData");
+  const selectAllDataQuery = "SELECT * FROM Marketing_Campaign";
+
+  pool.query(selectAllDataQuery, (err, result) => {
+    if (err) {
+      console.error(
+        "Error retrieving data from Marketing_Campaign table:",
+        err.message
+      );
+      res
+        .status(500)
+        .send("Error retrieving data from the Marketing_Campaign table");
+    } else {
+      const data = result;
+      res.render("SummarizeData", { data });
+    }
+  });
 });
 
 app.get("/grafikbar", (req, res) => {
@@ -69,20 +84,47 @@ app.post("/upload", upload.single("file"), (req, res) => {
       Z_CostContact, Z_Revenue, Response
     ) VALUES ?`;
 
-  const values = data.map(row => [
-    row.ID, row.Year_Birth, row.Education, row.Marital_Status, row.Income,
-    row.Kidhome, row.Teenhome, row.Dt_Customer, row.Recency, row.MntWines,
-    row.MntFruits, row.MntMeatProducts, row.MntFishProducts, row.MntSweetProducts,
-    row.MntGoldProds, row.NumDealsPurchases, row.NumWebPurchases,
-    row.NumCatalogPurchases, row.NumStorePurchases, row.NumWebVisitsMonth,
-    row.AcceptedCmp1, row.AcceptedCmp2, row.AcceptedCmp3, row.AcceptedCmp4,
-    row.AcceptedCmp5, row.Complain, row.Z_CostContact, row.Z_Revenue, row.Response
+  const values = data.map((row) => [
+    row.ID,
+    row.Year_Birth,
+    row.Education,
+    row.Marital_Status,
+    row.Income,
+    row.Kidhome,
+    row.Teenhome,
+    row.Dt_Customer,
+    row.Recency,
+    row.MntWines,
+    row.MntFruits,
+    row.MntMeatProducts,
+    row.MntFishProducts,
+    row.MntSweetProducts,
+    row.MntGoldProds,
+    row.NumDealsPurchases,
+    row.NumWebPurchases,
+    row.NumCatalogPurchases,
+    row.NumStorePurchases,
+    row.NumWebVisitsMonth,
+    row.AcceptedCmp1,
+    row.AcceptedCmp2,
+    row.AcceptedCmp3,
+    row.AcceptedCmp4,
+    row.AcceptedCmp5,
+    row.Complain,
+    row.Z_CostContact,
+    row.Z_Revenue,
+    row.Response,
   ]);
 
   pool.query(insertDataQuery, [values], (err, result) => {
     if (err) {
-      console.error("Error inserting data into Marketing_Campaign table:", err.message);
-      res.status(500).send("Error inserting data into the Marketing_Campaign table");
+      console.error(
+        "Error inserting data into Marketing_Campaign table:",
+        err.message
+      );
+      res
+        .status(500)
+        .send("Error inserting data into the Marketing_Campaign table");
     } else {
       console.log("Data inserted into Marketing_Campaign table successfully");
       res.redirect("/addfile?success=true"); // Redirect to the addfile page after successful upload
