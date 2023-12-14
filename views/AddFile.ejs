@@ -82,6 +82,37 @@
       #add{
         color: #ffcc00;
       }
+
+      .upload-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #4caf50;
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .upload-popup.show-popup {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
     </style>
 </head>
 <body>
@@ -111,5 +142,33 @@
             <button type="submit">Upload</button>
         </form>
     </div>
+
+    <!-- Popup for file upload success -->
+    <div id="uploadSuccessPopup" class="upload-popup">
+      <span class="close-popup" onclick="closeUploadPopup()">&times;</span>
+      <p>File upload successful!</p>
+    </div>
+
 </body>
 </html>
+
+<!-- JavaScript to show upload success popup -->
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const successParam = urlParams.get('success');
+
+  if (successParam === 'true') {
+    showUploadPopup();
+  }
+
+  function showUploadPopup() {
+    const uploadPopup = document.getElementById('uploadSuccessPopup');
+    uploadPopup.classList.add('show-popup');
+  }
+
+  function closeUploadPopup() {
+    const uploadPopup = document.getElementById('uploadSuccessPopup');
+    uploadPopup.classList.remove('show-popup');
+  }
+</script>
+
