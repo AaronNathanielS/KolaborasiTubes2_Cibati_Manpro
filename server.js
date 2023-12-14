@@ -135,3 +135,8 @@ app.post("/upload", upload.single("file"), (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+//summarize
+app.get('/views/SummarizeData.ejs', (req, res) => {
+  res.sendFile(path.join(__dirname, '/views/SummarizeData.ejs'));
+});
