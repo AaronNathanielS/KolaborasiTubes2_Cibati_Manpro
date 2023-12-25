@@ -7,6 +7,9 @@ const port = 8000;
 const app = express();
 app.set("view engine", "ejs");
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const pool = mysql.createPool({
   multipleStatements: true,
   user: "root",
@@ -130,6 +133,23 @@ app.post("/upload", upload.single("file"), (req, res) => {
       res.redirect("/addfile?success=true"); // Redirect to the addfile page after successful upload
     }
   });
+});
+
+app.post('/SummarizeData', (req, res) => {
+  const { selectColumn, selectOperation, groupByColumn } = req.body;
+
+  let sqlQuery = `SELECT ${groupByColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign GROUP BY ${groupByColumn}`;
+
+  // Eksekusi kueri SQL dan kirim hasilnya ke halaman EJS
+  pool.query(sqlQuery, (err, data) => {
+    if (err) {
+      // Handle kesalahan jika ada
+      console.error(err);
+      res.send('Error occurred');
+    } else {
+      res.render('SummarizeData', { data });
+    }
+  }); 
 });
 
 app.listen(port, () => {

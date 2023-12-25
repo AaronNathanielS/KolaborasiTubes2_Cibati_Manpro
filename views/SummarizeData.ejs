@@ -73,6 +73,7 @@
       button {
         background-color: #272727;
         color: #ffffff;
+        margin-top: 2%;
         padding: 10px 15px;
         border: none;
         border-radius: 5px;
@@ -110,7 +111,13 @@
       tr:hover {
         background-color: #f5f5f5;
       }
+
+      .table-container {
+        max-height: 400px; /* Adjust the height as needed */
+        overflow: auto;
+      }
     </style>
+
   </head>
   <body>
     <header>
@@ -135,88 +142,81 @@
     </div>
 
     <div class="container">
-      <h2>Write SQL Code</h2>
-      <form action="/summarize" method="post">
-        <label for="sqlCode">Enter SQL Code:</label>
-        <textarea
-          name="sqlCode"
-          id="sqlCode"
-          placeholder="Write your SQL code here"
-        ></textarea>
-        <button type="submit">Summarize Data</button>
+      <form action="/SummarizeData" method="post">
+        <div class="form-row">
+          <label for="selectColumn">Select Column:</label>
+          <select name="selectColumn" id="selectColumn">
+            <option value="Income">Income</option>
+            <option value="Kidhome">Kidhome</option>
+            <option value="Teenhome">Teenhome</option>
+            <option value="Recency">Recency</option>
+            <option value="MntWines">Wines</option>
+            <option value="MntFruits">Fruits</option>
+            <option value="MntMeatProducts">Meat Products</option>
+            <option value="MntFishProducts">Fish Products</option>
+            <option value="MntSweetProducts">Sweet Products</option>
+            <option value="MntGoldProds">Gold</option>
+            <option value="NumDealsPurchases">Deals Purchases</option>
+            <option value="NumWebPurchases">Web Purchases</option>
+            <option value="NumCatalogPurchases">Catalog Purchases</option>
+            <option value="NumStorePurchases">Store Purchases</option>
+            <option value="NumWebVisitsMonth">Web Visits Month</option>
+            <option value="AcceptedCmp1">AcceptedCmp1</option>
+            <option value="AcceptedCmp2">AcceptedCmp2</option>
+            <option value="AcceptedCmp3">AcceptedCmp3</option>
+            <option value="AcceptedCmp4">AcceptedCmp4</option>
+            <option value="AcceptedCmp5">AcceptedCmp5</option>
+            <option value="Complain">Complain</option>
+            <option value="Z_CostContact">Z Cost Contact</option>
+            <option value="Z_Revenue">Z Revenue</option>
+            <option value="Response">Response</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+        <label for="selectOperation">Select Operation:</label>
+          <select name="selectOperation" id="selectOperation">
+            <option value="SUM">SUM</option>
+            <option value="COUNT">COUNT</option>
+            <option value="AVG">AVERAGE</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="groupByColumn">Group By Column:</label>
+          <select name="groupByColumn" id="groupByColumn">
+            <option value="ID">ID</option>
+            <option value="Year_Birth">Year Birth</option>
+            <option value="Education">Education</option>
+            <option value="Marital_Status">Marital Status</option>
+            <option value="Dt_Customer">Date Customer</option>
+          </select>
+        </div>
+
+        <div class="button">
+          <button type="submit">Summarize</button>
+        </div>
       </form>
     </div>
-    <div class="container">
-      <div class="table">
-        <table border="1">
-          <tr>
-            <th>ID</th>
-            <th>Year_Birth</th>
-            <th>Education</th>
-            <th>Maritial_Status</th>
-            <th>Income</th>
-            <th>Kidhome</th>
-            <th>Teenhome</th>
-            <th>Dt_Customer</th>
-            <th>Recency</th>
-            <th>MntWines</th>
-            <th>MntFruits</th>
-            <th>MntMeatProducts</th>
-            <th>MntFishProducts</th>
-            <th>MntSweetProducts</th>
-            <th>MntGoldProds</th>
-            <th>NumDealsPurchases</th>
-            <th>NumWebPurchases</th>
-            <th>NumCatalogPurchases</th>
-            <th>NumStorePurchases</th>
-            <th>NumWebVisitsMonth</th>
-            <th>AcceptedCmp3</th>
-            <th>AcceptedCmp4</th>
-            <th>AcceptedCmp5</th>
-            <th>AcceptedCmp1</th>
-            <th>AcceptedCmp2</th>
-            <th>Complain</th>
-            <th>Z_CostContact</th>
-            <th>Z_Revenue</th>
-            <th>Response</th>
-            <!-- Tambahkan kolom lain sesuai dengan nama kolom di tabel -->
-          </tr>
-          <% data.forEach(row => { %>
-          <tr>
-            <td><%= row.ID %></td>
-            <td><%= row.Year_Birth %></td>
-            <td><%= row.Education %></td>
-            <td><%= row.Marital_Status %></td>
-            <td><%= row.Income %></td>
-            <td><%= row.Kidhome %></td>
-            <td><%= row.Teenhome %></td>
-            <td><%= row.Dt_Customer %></td>
-            <td><%= row.Recency %></td>
-            <td><%= row.MntWines %></td>
-            <td><%= row.MntFruits %></td>
-            <td><%= row.MntMeatProducts %></td>
-            <td><%= row.MntFishProducts %></td>
-            <td><%= row.MntSweetProducts %></td>
-            <td><%= row.MntGoldProds %></td>
-            <td><%= row.NumDealsPurchases %></td>
-            <td><%= row.NumWebPurchases %></td>
-            <td><%= row.NumCatalogPurchases %></td>
-            <td><%= row.NumStorePurchases %></td>
-            <td><%= row.NumWebVisitsMonth %></td>
-            <td><%= row.AcceptedCmp3 %></td>
-            <td><%= row.AcceptedCmp4 %></td>
-            <td><%= row.AcceptedCmp5 %></td>
-            <td><%= row.AcceptedCmp1 %></td>
-            <td><%= row.AcceptedCmp2 %></td>
-            <td><%= row.Complain %></td>
-            <td><%= row.Z_CostContact %></td>
-            <td><%= row.Z_Revenue %></td>
-            <td><%= row.Response %></td>
 
-            <!-- Tambahkan sel lain sesuai dengan nama kolom di tabel -->
+    <div class="container" id="dataTable">
+      <div class="table-container">
+      <table border="1">
+        <tr>
+          <% if (data.length > 0) { %>
+            <% Object.keys(data[0]).forEach(column => { %>
+              <th><%= column %></th>
+            <% }); %>
+          <% } %>
+        </tr>
+        <% data.forEach(row => { %>
+          <tr>
+            <% Object.keys(row).forEach(column => { %>
+              <td><%= row[column] %></td>
+            <% }); %>
           </tr>
-          <% }); %>
-        </table>
+        <% }); %>
+      </table>
       </div>
     </div>
   </body>
