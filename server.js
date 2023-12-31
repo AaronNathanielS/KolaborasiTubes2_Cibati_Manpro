@@ -170,3 +170,19 @@ app.post("/SummarizeData", (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+
+app.get("/api/bar-data", (req, res) => {
+  const columnX = req.query.columnX;
+  const columnY = req.query.columnY;
+
+  const query = `SELECT ??, ?? FROM Marketing_Campaign`; // Gunakan placeholder ?? untuk mencegah SQL injection
+  pool.query(query, [columnX, columnY], (err, results) => {
+    if (err) {
+      console.error("Error fetching bar chart data:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      res.json(results);
+    }
+  });
+});
