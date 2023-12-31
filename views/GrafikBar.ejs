@@ -204,6 +204,9 @@
         x: data.map((item) => item[selectedX]),
         y: data.map((item) => item[selectedY]),
         type: "bar",
+        marker: {
+          color: "rgb(255, 204, 0)", // Ganti nilai ini dengan warna yang diinginkan (misalnya: "blue" atau "#00ff00")
+        },
       };
 
       var layout = {
@@ -217,12 +220,12 @@
     .catch((error) => console.error("Error:", error));
 }
 
-document
-  .getElementById("updateChart")
-  .addEventListener("click", updatePlotBar);
+  document
+    .getElementById("updateChart")
+    .addEventListener("click", updatePlotBar);
 
-// Memanggil fungsi ini saat halaman dimuat
-window.onload = updatePlotBar;
+      // Memanggil fungsi ini saat halaman dimuat
+      window.onload = updatePlotBar;
 
     </script>
   </body>
