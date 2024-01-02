@@ -49,8 +49,6 @@
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-
-        
       }
 
       .container select {
@@ -102,8 +100,6 @@
       }
     </style>
     <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
-
-    
   </head>
   <body>
     <header>
@@ -139,7 +135,7 @@
           <option value="MntWines">MntWines</option>
           <option value="MntFruits">MntFruits</option>
           <option value="MntMeatProducts">MntMeatProducts</option>
-          <option value="MntFishProducts">MntSweetProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
           <option value="MntSweetProducts">MntSweetProducts</option>
           <option value="MntGoldProds">MntGoldProds</option>
           <option value="NumDealsPurchases">NumDealsPurchases</option>
@@ -167,7 +163,7 @@
           <option value="MntWines">MntWines</option>
           <option value="MntFruits">MntFruits</option>
           <option value="MntMeatProducts">MntMeatProducts</option>
-          <option value="MntFishProducts">MntSweetProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
           <option value="MntSweetProducts">MntSweetProducts</option>
           <option value="MntGoldProds">MntGoldProds</option>
           <option value="NumDealsPurchases">NumDealsPurchases</option>
@@ -188,46 +184,44 @@
 
         <button id="updateChart">Update Chart</button>
       </div>
-      
+
       <div id="barChart" style="width: 100%; height: 400px"></div>
     </div>
 
     <script>
       function updatePlotBar() {
-  var selectedX = document.getElementById("atributX").value;
-  var selectedY = document.getElementById("atributY").value;
+        var selectedX = document.getElementById("atributX").value;
+        var selectedY = document.getElementById("atributY").value;
 
-  fetch(`/api/bar-data?columnX=${selectedX}&columnY=${selectedY}`)
-    .then((response) => response.json())
-    .then((data) => {
-      var trace = {
-        x: data.map((item) => item[selectedX]),
-        y: data.map((item) => item[selectedY]),
-        type: "bar",
-        marker: {
-          color: "rgb(255, 204, 0)", // Ganti nilai ini dengan warna yang diinginkan (misalnya: "blue" atau "#00ff00")
-        },
-      };
+        fetch(`/api/bar-data?columnX=${selectedX}&columnY=${selectedY}`)
+          .then((response) => response.json())
+          .then((data) => {
+            var trace = {
+              x: data.map((item) => item[selectedX]),
+              y: data.map((item) => item[selectedY]),
+              type: "bar",
+              marker: {
+                color: "rgb(255, 204, 0)", // Ganti nilai ini dengan warna yang diinginkan (misalnya: "blue" atau "#00ff00")
+              },
+            };
 
-      var layout = {
-        title: "Bar Chart",
-        xaxis: { title: selectedX },
-        yaxis: { title: selectedY },
-      };
+            var layout = {
+              title: "Bar Chart",
+              xaxis: { title: selectedX },
+              yaxis: { title: selectedY },
+            };
 
-      Plotly.newPlot("barChart", [trace], layout);
-    })
-    .catch((error) => console.error("Error:", error));
-}
+            Plotly.newPlot("barChart", [trace], layout);
+          })
+          .catch((error) => console.error("Error:", error));
+      }
 
-  document
-    .getElementById("updateChart")
-    .addEventListener("click", updatePlotBar);
+      document
+        .getElementById("updateChart")
+        .addEventListener("click", updatePlotBar);
 
       // Memanggil fungsi ini saat halaman dimuat
       window.onload = updatePlotBar;
-
     </script>
   </body>
 </html>
-
