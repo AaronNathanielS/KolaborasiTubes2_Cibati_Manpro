@@ -7,7 +7,9 @@ const port = 8000;
 const app = express();
 app.set("view engine", "ejs");
 
-const bodyParser = require("body-parser");
+const moment = require("moment");
+
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const pool = mysql.createPool({
@@ -110,7 +112,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
     row.Income,
     row.Kidhome,
     row.Teenhome,
-    row.Dt_Customer,
+    moment(row.Dt_Customer, "DD-MM-YYYY").format("YYYY-MM-DD"),
     row.Recency,
     row.MntWines,
     row.MntFruits,
