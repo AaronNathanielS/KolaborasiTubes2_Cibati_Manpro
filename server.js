@@ -69,6 +69,21 @@ app.get("/grafikscatter", (req, res) => {
   res.render("GrafikScatter");
 });
 
+app.get("/api/scatter-data", (req, res) => {
+  const kolomX = req.query.kolomX;
+  const kolomY = req.query.kolomY;
+
+  const query = `SELECT ??, ?? FROM Marketing_Campaign`; // Gunakan placeholder ?? untuk mencegah SQL injection
+  pool.query(query, [kolomX, kolomY], (err, results) => {
+    if (err) {
+      console.error("Error fetching scatter plot data:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 //file upload CSV/Excel
 app.post("/upload", upload.single("file"), (req, res) => {
   const fileBuffer = req.file.buffer;
@@ -137,8 +152,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
   });
 });
 
-
-app.post('/SummarizeData', (req, res) => {
+app.post("/SummarizeData", (req, res) => {
   const { selectColumn, selectOperation, groupByColumn } = req.body;
 
   let sqlQuery = `SELECT ${groupByColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign GROUP BY ${groupByColumn}`;
@@ -148,11 +162,11 @@ app.post('/SummarizeData', (req, res) => {
     if (err) {
       // Handle kesalahan jika ada
       console.error(err);
-      res.send('Error occurred');
+      res.send("Error occurred");
     } else {
-      res.render('SummarizeData', { data });
+      res.render("SummarizeData", { data });
     }
-  }); 
+  });
 });
 
 app.listen(port, () => {
