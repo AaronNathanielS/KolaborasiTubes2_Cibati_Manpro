@@ -84,6 +84,41 @@ app.get("/api/scatter-data", (req, res) => {
   });
 });
 
+function convertDate(input) {
+    if (typeof input === 'number') {
+        // Excel date
+        return excelDateToJSDate(input);
+    } else {
+        // String date in DD/MM/YYYY format
+        let date = moment(input, "DD/MM/YYYY");
+        if (date.isValid()) {
+            return date.toDate();
+        } else {
+            console.error(`Invalid date: ${input}`);
+            return null;
+        }
+    }
+}
+
+function excelDateToJSDate(serial) {
+   var utc_days  = Math.floor(serial - 25569);
+   var utc_value = utc_days * 86400;                                        
+   var date_info = new Date(utc_value * 1000);
+
+   var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+   var total_seconds = Math.floor(86400 * fractional_day);
+
+   var seconds = total_seconds % 60;
+
+   total_seconds -= seconds;
+
+   var hours = Math.floor(total_seconds / (60 * 60));
+   var minutes = Math.floor(total_seconds / 60) % 60;
+
+   return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+}
+
 //file upload CSV/Excel
 app.post("/upload", upload.single("file"), (req, res) => {
   const fileBuffer = req.file.buffer;
@@ -104,37 +139,45 @@ app.post("/upload", upload.single("file"), (req, res) => {
       Z_CostContact, Z_Revenue, Response
     ) VALUES ?`;
 
-  const values = data.map((row) => [
-    row.ID,
-    row.Year_Birth,
-    row.Education,
-    row.Marital_Status,
-    row.Income,
-    row.Kidhome,
-    row.Teenhome,
-    moment(row.Dt_Customer, "DD-MM-YYYY").format("YYYY-MM-DD"),
-    row.Recency,
-    row.MntWines,
-    row.MntFruits,
-    row.MntMeatProducts,
-    row.MntFishProducts,
-    row.MntSweetProducts,
-    row.MntGoldProds,
-    row.NumDealsPurchases,
-    row.NumWebPurchases,
-    row.NumCatalogPurchases,
-    row.NumStorePurchases,
-    row.NumWebVisitsMonth,
-    row.AcceptedCmp1,
-    row.AcceptedCmp2,
-    row.AcceptedCmp3,
-    row.AcceptedCmp4,
-    row.AcceptedCmp5,
-    row.Complain,
-    row.Z_CostContact,
-    row.Z_Revenue,
-    row.Response,
-  ]);
+  const values = data.map((row) => {
+    let date = convertDate(row.Dt_Customer);
+    if (date !== null) {
+        // Format the JavaScript Date object to YYYY-MM-DD
+        date = moment(date).format("YYYY-MM-DD");
+    }
+    return [
+        row.ID,
+        row.Year_Birth,
+        row.Education,
+        row.Marital_Status,
+        row.Income,
+        row.Kidhome,
+        row.Teenhome,
+        date,
+        row.Recency,
+        row.MntWines,
+        row.MntFruits,
+        row.MntMeatProducts,
+        row.MntFishProducts,
+        row.MntSweetProducts,
+        row.MntGoldProds,
+        row.NumDealsPurchases,
+        row.NumWebPurchases,
+        row.NumCatalogPurchases,
+        row.NumStorePurchases,
+        row.NumWebVisitsMonth,
+        row.AcceptedCmp1,
+        row.AcceptedCmp2,
+        row.AcceptedCmp3,
+        row.AcceptedCmp4,
+        row.AcceptedCmp5,
+        row.Complain,
+        row.Z_CostContact,
+        row.Z_Revenue,
+        row.Response,
+    ];
+}).filter(row => row !== null);
+
 
   pool.query(insertDataQuery, [values], (err, result) => {
     if (err) {
@@ -155,7 +198,24 @@ app.post("/upload", upload.single("file"), (req, res) => {
 app.post("/SummarizeData", (req, res) => {
   const { selectColumn, selectOperation, groupByColumn } = req.body;
 
-  let sqlQuery = `SELECT ${groupByColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign GROUP BY ${groupByColumn}`;
+  let sqlQuery;
+  if (!(groupByColumn === '')) {
+    if (selectOperation === 'MIN' || selectOperation === 'MAX') {
+      sqlQuery = `SELECT ${groupByColumn}, 
+      ${selectOperation}(${selectColumn}) AS ${selectOperation}_${selectColumn} 
+      FROM Marketing_Campaign 
+      GROUP BY ${groupByColumn}`;
+    } else {
+      sqlQuery = `SELECT ${groupByColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign GROUP BY ${groupByColumn}`;
+    }
+  } else {
+    if (selectOperation === 'MIN' || selectOperation === 'MAX') {
+      sqlQuery = `SELECT ${selectOperation}(${selectColumn}) AS ${selectOperation}_${selectColumn} 
+      FROM Marketing_Campaign`;
+    } else {
+      sqlQuery = `SELECT ${selectColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign`;
+    }
+  } 
 
   // Eksekusi kueri SQL dan kirim hasilnya ke halaman EJS
   pool.query(sqlQuery, (err, data) => {
@@ -173,12 +233,27 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
+
 app.get("/api/bar-data", (req, res) => {
   const columnX = req.query.columnX;
   const columnY = req.query.columnY;
+  const aggregateX = req.query.aggregateX || '';
+  const aggregateY = req.query.aggregateY || '';
 
-  const query = `SELECT ??, ?? FROM Marketing_Campaign`; // Gunakan placeholder ?? untuk mencegah SQL injection
-  pool.query(query, [columnX, columnY], (err, results) => {
+  let query;
+  if (aggregateX && aggregateY) {
+    query = `SELECT ${aggregateX}(??) AS ${aggregateX}_${columnX}, ${aggregateY}(??) AS ${aggregateY}_${columnY} FROM Marketing_Campaign GROUP BY ??, ??`;
+  } else if (aggregateX) {
+    query = `SELECT ${aggregateX}(??) AS ${aggregateX}_${columnX}, ?? FROM Marketing_Campaign GROUP BY ??, ??`;
+  } else if (aggregateY) {
+    query = `SELECT ??, ${aggregateY}(??) AS ${aggregateY}_${columnY} FROM Marketing_Campaign GROUP BY ??, ??`;
+  } else {
+    query = `SELECT ??, ?? FROM Marketing_Campaign`;
+  }
+  console.log(aggregateX);
+  console.log(aggregateY);
+
+  pool.query(query, [columnX, columnY, columnX, columnY], (err, results) => {
     if (err) {
       console.error("Error fetching bar chart data:", err.message);
       res.status(500).json({ error: "Internal server error" });
@@ -187,3 +262,4 @@ app.get("/api/bar-data", (req, res) => {
     }
   });
 });
+
