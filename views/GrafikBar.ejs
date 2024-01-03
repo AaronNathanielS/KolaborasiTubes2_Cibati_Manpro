@@ -126,6 +126,15 @@
     <div class="container">
       <h2>Grafik Batang Berdasarkan Data</h2>
       <div>
+        <p>Aggregat for X<p>
+        <select name="aggregatX" id="aggregatX">
+          <option value="">-</option>
+          <option value="SUM">SUM</option>
+          <option value="COUNT">COUNT</option>
+          <option value="AVG">AVERAGE</option>
+          <option value="MIN">MIN</option>
+          <option value="MAX">MAX</option>
+        </select>
         <p>Attribute X</p>
         <select id="atributX">
           <option value="income">Income</option>
@@ -154,6 +163,15 @@
           <option value="Response">Response</option>
         </select>
 
+        <p>Aggregat for Y<p>
+        <select name="aggregatY" id="aggregatY">
+          <option value="">-</option>
+          <option value="SUM">SUM</option>
+          <option value="COUNT">COUNT</option>
+          <option value="AVG">AVERAGE</option>
+          <option value="MIN">MIN</option>
+          <option value="MAX">MAX</option>
+        </select>
         <p>Attribute Y</p>
         <select id="atributY">
           <option value="income">Income</option>
@@ -190,10 +208,12 @@
 
     <script>
       function updatePlotBar() {
+        let aggregatX = document.getElementById('aggregatX').value;
+        let aggregatY = document.getElementById('aggregatY').value;
         var selectedX = document.getElementById("atributX").value;
         var selectedY = document.getElementById("atributY").value;
 
-        fetch(`/api/bar-data?columnX=${selectedX}&columnY=${selectedY}`)
+        fetch(`/api/bar-data?columnX=${selectedX}&columnY=${selectedY}&aggregateX=${aggregatX}&aggregateY=${aggregatY}`)
           .then((response) => response.json())
           .then((data) => {
             var trace = {
@@ -201,7 +221,7 @@
               y: data.map((item) => item[selectedY]),
               type: "bar",
               marker: {
-                color: "rgb(255, 204, 0)", // Ganti nilai ini dengan warna yang diinginkan (misalnya: "blue" atau "#00ff00")
+                color: "rgb(255, 204, 0)", // Change this value to the desired color (e.g., "blue" or "#00ff00")
               },
             };
 
@@ -220,7 +240,7 @@
         .getElementById("updateChart")
         .addEventListener("click", updatePlotBar);
 
-      // Memanggil fungsi ini saat halaman dimuat
+      // Call this function when the page loads
       window.onload = updatePlotBar;
     </script>
   </body>
