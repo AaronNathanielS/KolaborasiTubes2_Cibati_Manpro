@@ -2,10 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grafik Bar</title>
+    <script src="/index.js" defer></script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -50,6 +51,36 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       }
 
+      .container select {
+        width: 100%;
+        padding: 8px 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+      }
+
+      .container p {
+        margin: 10px 0 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .container button {
+        padding: 10px 15px;
+        background-color: #272727;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .container button:hover {
+        background-color: #ffcc00;
+      }
+
       form {
         margin-top: 20px;
         padding: 20px;
@@ -64,15 +95,16 @@
         border: 1px solid #ccc;
         border-radius: 5px;
       }
-      #bar{
+      #bar {
         color: #ffcc00;
       }
     </style>
-</head>
-<body>
+    <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+  </head>
+  <body>
     <header>
-        <h1>Selamat Datang!!!</h1>
-        <h2>Informasi atau Dashbord Data Promosi Retail</h2>
+      <h1>Selamat Datang!!!</h1>
+      <h2>Informasi atau Dashbord Data Promosi Retail</h2>
     </header>
 
     <nav>
@@ -84,43 +116,112 @@
     </nav>
 
     <div class="container">
-        <h2>Grafik Bar</h2>
-        <p>
-            This is the home page of our web application. You can find general
-            information about the features we provide here.
-        </p>
+      <h2>Grafik Bar</h2>
+      <p>
+        This is the home page of our web application. You can find general
+        information about the features we provide here.
+      </p>
     </div>
 
     <div class="container">
-        <h2>Grafik Bar Berdasarkan Data</h2>
-        <canvas id="barChart"></canvas>
+      <h2>Grafik Batang Berdasarkan Data</h2>
+      <div>
+        <p>Attribute X</p>
+        <select id="atributX">
+          <option value="income">Income</option>
+          <option value="Kidhome">Kidhome</option>
+          <option value="Teenhome">Teenhome</option>
+          <option value="Recency">Recency</option>
+          <option value="MntWines">MntWines</option>
+          <option value="MntFruits">MntFruits</option>
+          <option value="MntMeatProducts">MntMeatProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
+          <option value="MntSweetProducts">MntSweetProducts</option>
+          <option value="MntGoldProds">MntGoldProds</option>
+          <option value="NumDealsPurchases">NumDealsPurchases</option>
+          <option value="NumWebPurchases">NumWebPurchases</option>
+          <option value="NumCatalogPurchases">NumCatalogPurchases</option>
+          <option value="NumStorePurchases">NumStorePurchases</option>
+          <option value="NumWebVisitsMonth">NumWebVisitsMonth</option>
+          <option value="AcceptedCmp1">AcceptedCmp1</option>
+          <option value="AcceptedCmp2">AcceptedCmp2</option>
+          <option value="AcceptedCmp3">AcceptedCmp3</option>
+          <option value="AcceptedCmp4">AcceptedCmp4</option>
+          <option value="AcceptedCmp5">AcceptedCmp5</option>
+          <option value="Complain">Complain</option>
+          <option value="Z_CostContact">Z Cost Contact</option>
+          <option value="Z_Revenue">Z Revenue</option>
+          <option value="Response">Response</option>
+        </select>
+
+        <p>Attribute Y</p>
+        <select id="atributY">
+          <option value="income">Income</option>
+          <option value="Kidhome">Kidhome</option>
+          <option value="Teenhome">Teenhome</option>
+          <option value="Recency">Recency</option>
+          <option value="MntWines">MntWines</option>
+          <option value="MntFruits">MntFruits</option>
+          <option value="MntMeatProducts">MntMeatProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
+          <option value="MntSweetProducts">MntSweetProducts</option>
+          <option value="MntGoldProds">MntGoldProds</option>
+          <option value="NumDealsPurchases">NumDealsPurchases</option>
+          <option value="NumWebPurchases">NumWebPurchases</option>
+          <option value="NumCatalogPurchases">NumCatalogPurchases</option>
+          <option value="NumStorePurchases">NumStorePurchases</option>
+          <option value="NumWebVisitsMonth">NumWebVisitsMonth</option>
+          <option value="AcceptedCmp1">AcceptedCmp1</option>
+          <option value="AcceptedCmp2">AcceptedCmp2</option>
+          <option value="AcceptedCmp3">AcceptedCmp3</option>
+          <option value="AcceptedCmp4">AcceptedCmp4</option>
+          <option value="AcceptedCmp5">AcceptedCmp5</option>
+          <option value="Complain">Complain</option>
+          <option value="Z_CostContact">Z Cost Contact</option>
+          <option value="Z_Revenue">Z Revenue</option>
+          <option value="Response">Response</option>
+        </select>
+
+        <button id="updateChart">Update Chart</button>
+      </div>
+
+      <div id="barChart" style="width: 100%; height: 400px"></div>
     </div>
 
     <script>
-        // Tambahkan skrip JavaScript untuk membuat grafik batang di sini
-        // Anda dapat menggunakan library seperti Chart.js untuk membuat grafik
-        // Contoh:
-        // var ctx = document.getElementById('barChart').getContext('2d');
-        // var myChart = new Chart(ctx, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: ['Label1', 'Label2', 'Label3'],
-        //         datasets: [{
-        //             label: 'Grafik Bar',
-        //             data: [10, 20, 30],
-        //             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        //             borderColor: 'rgba(75, 192, 192, 1)',
-        //             borderWidth: 1
-        //         }]
-        //     },
-        //     options: {
-        //         scales: {
-        //             y: {
-        //                 beginAtZero: true
-        //             }
-        //         }
-        //     }
-        // });
+      function updatePlotBar() {
+        var selectedX = document.getElementById("atributX").value;
+        var selectedY = document.getElementById("atributY").value;
+
+        fetch(`/api/bar-data?columnX=${selectedX}&columnY=${selectedY}`)
+          .then((response) => response.json())
+          .then((data) => {
+            var trace = {
+              x: data.map((item) => item[selectedX]),
+              y: data.map((item) => item[selectedY]),
+              type: "bar",
+              marker: {
+                color: "rgb(255, 204, 0)", // Ganti nilai ini dengan warna yang diinginkan (misalnya: "blue" atau "#00ff00")
+              },
+            };
+
+            var layout = {
+              title: "Bar Chart",
+              xaxis: { title: selectedX },
+              yaxis: { title: selectedY },
+            };
+
+            Plotly.newPlot("barChart", [trace], layout);
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      document
+        .getElementById("updateChart")
+        .addEventListener("click", updatePlotBar);
+
+      // Memanggil fungsi ini saat halaman dimuat
+      window.onload = updatePlotBar;
     </script>
-</body>
+  </body>
 </html>

@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grafik Scatter</title>
@@ -46,6 +46,35 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       }
 
+      .container select {
+        width: 100%;
+        padding: 8px 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+      }
+
+      .container p {
+        margin: 10px 0 5px;
+        font-weight: bold;
+        color: #333;
+      }
+      .container button {
+        padding: 10px 15px;
+        background-color: #272727;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .container button:hover {
+        background-color: #ffcc00;
+      }
+
       form {
         margin-top: 20px;
         padding: 20px;
@@ -53,22 +82,23 @@
         border-radius: 5px;
       }
 
-      canvas{
+      canvas {
         width: 100%;
         height: 400px;
         margin-top: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
       }
-      #scatter{
+      #scatter {
         color: #ffcc00;
       }
     </style>
-</head>
-<body>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
     <header>
-        <h1>Selamat Datang!!!</h1>
-        <h2>Informasi atau Dashbord Data Promosi Retail</h2>
+      <h1>Selamat Datang!!!</h1>
+      <h2>Informasi atau Dashbord Data Promosi Retail</h2>
     </header>
 
     <nav>
@@ -80,47 +110,116 @@
     </nav>
 
     <div class="container">
-        <h2>Grafik Scatter</h2>
-        <p>
-            This is the home page of our web application. You can find general
-            information about the features we provide here.
-        </p>
+      <h2>Grafik Scatter</h2>
+      <p>
+        This is the home page of our web application. You can find general
+        information about the features we provide here.
+      </p>
     </div>
 
     <div class="container">
-        <h2>Grafik Scatter Berdasarkan Data</h2>
-        <canvas id="scatterChart"></canvas>
+      <h2>Grafik Scatter Berdasarkan Data</h2>
+      <div>
+        <p>Attribute X</p>
+        <select id="attributeX">
+          <option value="income">Income</option>
+          <option value="Kidhome">Kidhome</option>
+          <option value="Teenhome">Teenhome</option>
+          <option value="Recency">Recency</option>
+          <option value="MntWines">MntWines</option>
+          <option value="MntFruits">MntFruits</option>
+          <option value="MntMeatProducts">MntMeatProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
+          <option value="MntSweetProducts">MntSweetProducts</option>
+          <option value="MntGoldProds">MntGoldProds</option>
+          <option value="NumDealsPurchases">NumDealsPurchases</option>
+          <option value="NumWebPurchases">NumWebPurchases</option>
+          <option value="NumCatalogPurchases">NumCatalogPurchases</option>
+          <option value="NumStorePurchases">NumStorePurchases</option>
+          <option value="NumWebVisitsMonth">NumWebVisitsMonth</option>
+          <option value="AcceptedCmp1">AcceptedCmp1</option>
+          <option value="AcceptedCmp2">AcceptedCmp2</option>
+          <option value="AcceptedCmp3">AcceptedCmp3</option>
+          <option value="AcceptedCmp4">AcceptedCmp4</option>
+          <option value="AcceptedCmp5">AcceptedCmp5</option>
+          <option value="Complain">Complain</option>
+          <option value="Z_CostContact">Z Cost Contact</option>
+          <option value="Z_Revenue">Z Revenue</option>
+          <option value="Response">Response</option>
+        </select>
+
+        <p>Attribute Y</p>
+        <select id="attributeY">
+          <option value="income">Income</option>
+          <option value="Kidhome">Kidhome</option>
+          <option value="Teenhome">Teenhome</option>
+          <option value="Recency">Recency</option>
+          <option value="MntWines">MntWines</option>
+          <option value="MntFruits">MntFruits</option>
+          <option value="MntMeatProducts">MntMeatProducts</option>
+          <option value="MntFishProducts">MntFishProducts</option>
+          <option value="MntSweetProducts">MntSweetProducts</option>
+          <option value="MntGoldProds">MntGoldProds</option>
+          <option value="NumDealsPurchases">NumDealsPurchases</option>
+          <option value="NumWebPurchases">NumWebPurchases</option>
+          <option value="NumCatalogPurchases">NumCatalogPurchases</option>
+          <option value="NumStorePurchases">NumStorePurchases</option>
+          <option value="NumWebVisitsMonth">NumWebVisitsMonth</option>
+          <option value="AcceptedCmp1">AcceptedCmp1</option>
+          <option value="AcceptedCmp2">AcceptedCmp2</option>
+          <option value="AcceptedCmp3">AcceptedCmp3</option>
+          <option value="AcceptedCmp4">AcceptedCmp4</option>
+          <option value="AcceptedCmp5">AcceptedCmp5</option>
+          <option value="Complain">Complain</option>
+          <option value="Z_CostContact">Z Cost Contact</option>
+          <option value="Z_Revenue">Z Revenue</option>
+          <option value="Response">Response</option>
+        </select>
+
+        <button id="updateChart">Update Chart</button>
+      </div>
+
+      <div id="scatterPlot" style="width: 100%; height: 400px"></div>
     </div>
 
     <script>
-        // Tambahkan skrip JavaScript untuk membuat grafik scatter di sini
-        // Anda dapat menggunakan library seperti Chart.js untuk membuat grafik
-        // Contoh:
-        // var ctx = document.getElementById('scatterChart').getContext('2d');
-        // var myChart = new Chart(ctx, {
-        //     type: 'scatter',
-        //     data: {
-        //         datasets: [{
-        //             label: 'Grafik Scatter',
-        //             data: [{ x: 10, y: 20 }, { x: 15, y: 25 }, { x: 20, y: 30 }],
-        //             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        //             borderColor: 'rgba(75, 192, 192, 1)',
-        //             borderWidth: 1
-        //         }]
-        //     },
-        //     options: {
-        //         scales: {
-        //             x: {
-        //                 type: 'linear',
-        //                 position: 'bottom'
-        //             },
-        //             y: {
-        //                 type: 'linear',
-        //                 position: 'left'
-        //             }
-        //         }
-        //     }
-        // });
+      function updatePlot() {
+        var selectedX = document.getElementById("attributeX").value;
+        var selectedY = document.getElementById("attributeY").value;
+
+        fetch(`/api/scatter-data?kolomX=${selectedX}&kolomY=${selectedY}`)
+          .then((response) => response.json())
+          .then((data) => {
+            var trace = {
+              x: data.map((item) => item[selectedX]),
+              y: data.map((item) => item[selectedY]),
+              mode: "markers",
+              type: "scatter",
+              marker: {
+                color: "rgb(255, 204, 0)",
+                opacity: 0.7,
+                line: {
+                  color: "rgb(39,39,39)",
+                  width: 1.5,
+                },
+              },
+            };
+
+            var layout = {
+              title: "Scatter Plot",
+              xaxis: { title: selectedX },
+              yaxis: { title: selectedY },
+            };
+
+            Plotly.newPlot("scatterPlot", [trace], layout);
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      document
+        .getElementById("updateChart")
+        .addEventListener("click", updatePlot);
+      window.onload = updatePlot; // Opsional, untuk memuat grafik awal dengan data default
     </script>
-</body>
+  </body>
 </html>

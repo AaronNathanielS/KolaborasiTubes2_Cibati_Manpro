@@ -7,6 +7,11 @@ const port = 8000;
 const app = express();
 app.set("view engine", "ejs");
 
+const moment = require("moment");
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const pool = mysql.createPool({
   multipleStatements: true,
   user: "root",
@@ -64,6 +69,21 @@ app.get("/grafikscatter", (req, res) => {
   res.render("GrafikScatter");
 });
 
+app.get("/api/scatter-data", (req, res) => {
+  const kolomX = req.query.kolomX;
+  const kolomY = req.query.kolomY;
+
+  const query = `SELECT ??, ?? FROM Marketing_Campaign`; // Gunakan placeholder ?? untuk mencegah SQL injection
+  pool.query(query, [kolomX, kolomY], (err, results) => {
+    if (err) {
+      console.error("Error fetching scatter plot data:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 //file upload CSV/Excel
 app.post("/upload", upload.single("file"), (req, res) => {
   const fileBuffer = req.file.buffer;
@@ -92,7 +112,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
     row.Income,
     row.Kidhome,
     row.Teenhome,
-    row.Dt_Customer,
+    moment(row.Dt_Customer, "DD-MM-YYYY").format("YYYY-MM-DD"),
     row.Recency,
     row.MntWines,
     row.MntFruits,
@@ -132,11 +152,38 @@ app.post("/upload", upload.single("file"), (req, res) => {
   });
 });
 
+app.post("/SummarizeData", (req, res) => {
+  const { selectColumn, selectOperation, groupByColumn } = req.body;
+
+  let sqlQuery = `SELECT ${groupByColumn}, ${selectOperation}(${selectColumn}) AS ${selectColumn} FROM Marketing_Campaign GROUP BY ${groupByColumn}`;
+
+  // Eksekusi kueri SQL dan kirim hasilnya ke halaman EJS
+  pool.query(sqlQuery, (err, data) => {
+    if (err) {
+      // Handle kesalahan jika ada
+      console.error(err);
+      res.send("Error occurred");
+    } else {
+      res.render("SummarizeData", { data });
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-//summarize
-app.get('/views/SummarizeData.ejs', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/SummarizeData.ejs'));
+app.get("/api/bar-data", (req, res) => {
+  const columnX = req.query.columnX;
+  const columnY = req.query.columnY;
+
+  const query = `SELECT ??, ?? FROM Marketing_Campaign`; // Gunakan placeholder ?? untuk mencegah SQL injection
+  pool.query(query, [columnX, columnY], (err, results) => {
+    if (err) {
+      console.error("Error fetching bar chart data:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      res.json(results);
+    }
+  });
 });
